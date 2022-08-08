@@ -23,7 +23,13 @@ geolocation = json.load(open("geojson/brazil_geo.json"))
 state_data_ = state_data[state_data["data"] == "2020-05-13"]
 data_ = state_data[state_data["estado"] == "RJ"]
 
+# Instantiate dash app
 app = Dash(__name__, external_stylesheets=[dbc.themes.CYBORG])
+app.title = "Dash Plotly Demo" 
+
+# Reference the underlying flask app (Used by gunicorn webserver in Heroku production deployment)
+server = app.server 
+
 fig = px.choropleth_mapbox(
     state_data_,
     locations="estado",
@@ -332,4 +338,4 @@ def update_location(click_data, n_clicks):
         return "BRASIL"
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=False, host='0.0.0.0', port=8050)
